@@ -74,5 +74,5 @@ st.pyplot(fig)
 
 # Insight
 st.subheader("Insight")
-st.write("1. Penggunaan sepeda meningkat pada musim panas dan menurun di musim dingin.")
+st.write("1. Penggunaan sepeda meningkat pada musim gugur dan menurun di musim semi.")
 st.write("2. Terdapat korelasi positif antara suhu dan jumlah penggunaan sepeda.")
