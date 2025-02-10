@@ -10,7 +10,7 @@ df = pd.read_csv("dashboard/bike_sharing_full.csv")
 df['dteday'] = pd.to_datetime(df['dteday'])
 
 # Mapping season numbers to names
-season_mapping = {1: "Spring", 2: "Summer", 3: "Fall", 4: "Winter"}
+season_mapping = {1: "Springer", 2: "Summer", 3: "Fall", 4: "Winter"}
 df['season'] = df['season'].map(season_mapping)
 
 # Dashboard Title
