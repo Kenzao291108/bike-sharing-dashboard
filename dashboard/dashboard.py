@@ -11,7 +11,7 @@ df['dteday'] = pd.to_datetime(df['dteday'])
 
 # Mapping season numbers to names
 season_mapping = {1: "Springer", 2: "Summer", 3: "Fall", 4: "Winter"}
-df['season'] = df['season'].map(season_mapping)
+df["season"] = df["season"].map(season_mapping)
 
 # Dashboard Title
 st.title("Bike Sharing Data Dashboard")
@@ -32,15 +32,22 @@ filtered_df = filtered_df[filtered_df["season"] == season]
 
 # Visualisasi jumlah penggunaan sepeda berdasarkan musim
 st.subheader("Penggunaan Sepeda Berdasarkan Musim")
-fig, ax = plt.subplots()
-sns.barplot(x=filtered_df["season"], y=filtered_df["cnt"], ci=None, ax=ax)
+fig, ax = plt.subplots(figsize=(10, 6))  # Memperbesar ukuran grafik
+sns.barplot(x=filtered_df["season"], y=filtered_df["cnt"], ci=None, ax=ax, palette="Blues")
+
+# Menambahkan nilai di atas setiap batang
+for p in ax.patches:
+    ax.annotate(f'{int(p.get_height())}', 
+                (p.get_x() + p.get_width() / 2., p.get_height()), 
+                ha='center', va='bottom', fontsize=12, color='black', fontweight='bold')
+
 ax.set_xlabel("Musim")
 ax.set_ylabel("Jumlah Penggunaan")
 st.pyplot(fig)
 
 # Visualisasi hubungan antara suhu dan jumlah pengguna
 st.subheader("Hubungan Temperatur dan Jumlah Pengguna")
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(10, 6))  # Memperbesar ukuran grafik
 sns.scatterplot(x=filtered_df["temp"], y=filtered_df["cnt"], alpha=0.5, ax=ax)
 ax.set_xlabel("Temperatur")
 ax.set_ylabel("Jumlah Penggunaan")
