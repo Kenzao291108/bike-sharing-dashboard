@@ -10,7 +10,7 @@ df = pd.read_csv("dashboard/bike_sharing_full.csv")
 df['dteday'] = pd.to_datetime(df['dteday'])
 
 # Mapping season numbers to names
-season_mapping = {1: "Springer", 2: "Summer", 3: "Fall", 4: "Winter"}
+season_mapping = {1: "Spring", 2: "Summer", 3: "Fall", 4: "Winter"}
 df["season"] = df["season"].map(season_mapping)
 
 # Dashboard Title
@@ -23,23 +23,40 @@ st.sidebar.header("Filter Data")
 date_range = st.sidebar.date_input("Pilih Rentang Tanggal:", [df['dteday'].min(), df['dteday'].max()],
                                    min_value=df['dteday'].min(), max_value=df['dteday'].max())
 
-# Season filter
-season = st.sidebar.selectbox("Pilih Musim:", df["season"].unique())
+# Season filter with "All Season" option
+season_options = ["All Season"] + list(df["season"].unique())
+season = st.sidebar.selectbox("Pilih Musim:", season_options)
 
-# Filter data berdasarkan rentang tanggal dan musim
+# Filter data berdasarkan rentang tanggal
 filtered_df = df[(df['dteday'] >= pd.Timestamp(date_range[0])) & (df['dteday'] <= pd.Timestamp(date_range[1]))]
-filtered_df = filtered_df[filtered_df["season"] == season]
+
+# Jika user memilih selain "All Season", filter berdasarkan musim
+if season != "All Season":
+    filtered_df = filtered_df[filtered_df["season"] == season]
 
 # Visualisasi jumlah penggunaan sepeda berdasarkan musim
 st.subheader("Penggunaan Sepeda Berdasarkan Musim")
-fig, ax = plt.subplots(figsize=(10, 6))  # Memperbesar ukuran grafik
-sns.barplot(x=filtered_df["season"], y=filtered_df["cnt"], ci=None, ax=ax, palette="Blues")
+fig, ax = plt.subplots(figsize=(10, 6))  # Perbesar grafik
 
-# Menambahkan nilai di atas setiap batang
-for p in ax.patches:
-    ax.annotate(f'{int(p.get_height())}', 
-                (p.get_x() + p.get_width() / 2., p.get_height()), 
-                ha='center', va='bottom', fontsize=12, color='black', fontweight='bold')
+if season == "All Season":
+    # Grouping data untuk semua musim
+    season_counts = filtered_df.groupby("season")["cnt"].sum().reset_index()
+    sns.barplot(x="season", y="cnt", data=season_counts, ci=None, ax=ax, palette="Blues")
+    
+    # Menambahkan nilai di atas setiap batang
+    for p in ax.patches:
+        ax.annotate(f'{int(p.get_height())}', 
+                    (p.get_x() + p.get_width() / 2., p.get_height()), 
+                    ha='center', va='bottom', fontsize=12, color='black', fontweight='bold')
+else:
+    # Menampilkan data hanya untuk musim yang dipilih
+    sns.barplot(x=filtered_df["season"], y=filtered_df["cnt"], ci=None, ax=ax, palette="Blues")
+
+    # Menambahkan nilai di atas setiap batang
+    for p in ax.patches:
+        ax.annotate(f'{int(p.get_height())}', 
+                    (p.get_x() + p.get_width() / 2., p.get_height()), 
+                    ha='center', va='bottom', fontsize=12, color='black', fontweight='bold')
 
 ax.set_xlabel("Musim")
 ax.set_ylabel("Jumlah Penggunaan")
@@ -47,7 +64,7 @@ st.pyplot(fig)
 
 # Visualisasi hubungan antara suhu dan jumlah pengguna
 st.subheader("Hubungan Temperatur dan Jumlah Pengguna")
-fig, ax = plt.subplots(figsize=(10, 6))  # Memperbesar ukuran grafik
+fig, ax = plt.subplots(figsize=(10, 6))  # Perbesar grafik
 sns.scatterplot(x=filtered_df["temp"], y=filtered_df["cnt"], alpha=0.5, ax=ax)
 ax.set_xlabel("Temperatur")
 ax.set_ylabel("Jumlah Penggunaan")
