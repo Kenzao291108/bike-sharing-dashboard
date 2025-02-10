@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Load dataset
-df = pd.read_csv("bike_sharing.csv")
+df = pd.read_csv("bike_sharing_full.csv")
 
 # Dashboard Title
 st.title("Bike Sharing Data Dashboard")
@@ -33,3 +33,4 @@ st.pyplot(fig)
 st.subheader("Insight")
 st.write("1. Penggunaan sepeda meningkat pada musim panas dan menurun di musim dingin.")
 st.write("2. Terdapat korelasi positif antara suhu dan jumlah penggunaan sepeda.")
+
