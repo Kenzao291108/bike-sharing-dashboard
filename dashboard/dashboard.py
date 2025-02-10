@@ -13,6 +13,10 @@ df['dteday'] = pd.to_datetime(df['dteday'])
 season_mapping = {1: "Spring", 2: "Summer", 3: "Fall", 4: "Winter"}
 df["season"] = df["season"].map(season_mapping)
 
+# Pastikan urutan musim sesuai
+season_order = ["Spring", "Summer", "Fall", "Winter"]
+df["season"] = pd.Categorical(df["season"], categories=season_order, ordered=True)
+
 # Dashboard Title
 st.title("Bike Sharing Data Dashboard")
 
@@ -36,9 +40,9 @@ fig, ax = plt.subplots(figsize=(10, 6))  # Perbesar grafik
 
 if season == "All Season":
     # Grouping data untuk semua musim
-    season_counts = filtered_df.groupby("season")["cnt"].sum().reset_index()
-    sns.barplot(x="season", y="cnt", data=season_counts, ci=None, ax=ax, palette="Blues")
-    
+    season_counts = filtered_df.groupby("season", observed=True)["cnt"].sum().reset_index()
+    sns.barplot(x="season", y="cnt", data=season_counts, order=season_order, ci=None, ax=ax, palette="Blues")
+
     # Menambahkan nilai di atas setiap batang
     for p in ax.patches:
         ax.annotate(f'{int(p.get_height())}', 
@@ -46,8 +50,9 @@ if season == "All Season":
                     ha='center', va='bottom', fontsize=12, color='black', fontweight='bold')
 else:
     # Jika musim tertentu dipilih, tetap tampilkan jumlah totalnya
-    season_total = filtered_df.groupby("season")["cnt"].sum().reset_index()
-    sns.barplot(x="season", y="cnt", data=season_total[season_total["season"] == season], ci=None, ax=ax, palette="Blues")
+    season_total = filtered_df.groupby("season", observed=True)["cnt"].sum().reset_index()
+    sns.barplot(x="season", y="cnt", data=season_total[season_total["season"] == season], 
+                order=season_order, ci=None, ax=ax, palette="Blues")
 
     # Menambahkan nilai di atas batang
     for p in ax.patches:
