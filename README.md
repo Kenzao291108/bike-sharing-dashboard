@@ -11,10 +11,16 @@ Dashboard interaktif ini dibuat menggunakan **Streamlit** untuk menganalisis dat
 ## 📂 Struktur Repository
 ```
 submission/
-├─── dashboard.py          # Kode utama untuk Streamlit Dashboard
-├─── bike_sharing.csv      # Dataset yang digunakan
-├─── requirements.txt      # Library yang dibutuhkan
-└─── README.md             # Dokumentasi proyek
+├─── dashboard
+   ├─── bike_sharing_full.csv
+   ├─── dashboard.py
+├─── data
+   ├─── day.csv
+   ├─── hour.csv     
+├─── notebook.ipynb
+├─── url.txt  
+├─── requirements.txt      
+└─── README.md             
 ```
 
 ## 🔧 Instalasi dan Menjalankan Secara Lokal
