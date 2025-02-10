@@ -9,6 +9,10 @@ df = pd.read_csv("dashboard/bike_sharing_full.csv")
 # Convert 'dteday' to datetime format
 df['dteday'] = pd.to_datetime(df['dteday'])
 
+# Mapping season numbers to names
+season_mapping = {1: "Spring", 2: "Summer", 3: "Fall", 4: "Winter"}
+df['season'] = df['season'].map(season_mapping)
+
 # Dashboard Title
 st.title("Bike Sharing Data Dashboard")
 
