@@ -30,10 +30,6 @@ season = st.sidebar.selectbox("Pilih Musim:", season_options)
 # Filter data berdasarkan rentang tanggal
 filtered_df = df[(df['dteday'] >= pd.Timestamp(date_range[0])) & (df['dteday'] <= pd.Timestamp(date_range[1]))]
 
-# Jika user memilih selain "All Season", filter berdasarkan musim
-if season != "All Season":
-    filtered_df = filtered_df[filtered_df["season"] == season]
-
 # Visualisasi jumlah penggunaan sepeda berdasarkan musim
 st.subheader("Penggunaan Sepeda Berdasarkan Musim")
 fig, ax = plt.subplots(figsize=(10, 6))  # Perbesar grafik
@@ -49,10 +45,11 @@ if season == "All Season":
                     (p.get_x() + p.get_width() / 2., p.get_height()), 
                     ha='center', va='bottom', fontsize=12, color='black', fontweight='bold')
 else:
-    # Menampilkan data hanya untuk musim yang dipilih
-    sns.barplot(x=filtered_df["season"], y=filtered_df["cnt"], ci=None, ax=ax, palette="Blues")
+    # Jika musim tertentu dipilih, tetap tampilkan jumlah totalnya
+    season_total = filtered_df.groupby("season")["cnt"].sum().reset_index()
+    sns.barplot(x="season", y="cnt", data=season_total[season_total["season"] == season], ci=None, ax=ax, palette="Blues")
 
-    # Menambahkan nilai di atas setiap batang
+    # Menambahkan nilai di atas batang
     for p in ax.patches:
         ax.annotate(f'{int(p.get_height())}', 
                     (p.get_x() + p.get_width() / 2., p.get_height()), 
